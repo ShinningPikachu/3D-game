@@ -87,6 +87,11 @@ public class MovePlayer : MonoBehaviour
         else
             speedY -= gravity * Time.deltaTime;
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Entered collision with " + collision.gameObject.name);
+    }
 }
 
 
