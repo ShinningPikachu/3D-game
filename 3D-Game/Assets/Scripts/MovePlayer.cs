@@ -1,23 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class MovePlayer : MonoBehaviour
 {
     public float rotationSpeed, jumpSpeed, gravity;
 
     Vector3 startDirection;
-    float speedY;
+    public float speedY;
 
+    bool cicle; // false -> outern 
+    bool changeButton;
+    public bool inmortal;
+    bool changeInmortal;
     // Start is called before the first frame update
+    public bool dir;
+
+    public float dashTimer;
+    bool changeDash;
     void Start()
     {
         // Store starting direction of the player with respect to the axis of the level
         startDirection = transform.position - transform.parent.position;
         startDirection.y = 0.0f;
         startDirection.Normalize();
-
+        dir = false;
         speedY = 0;
+        cicle = false;
+        changeButton = false;
+        inmortal = false;
+        changeInmortal = false;
+        dashTimer = 0;
+        changeDash = false;
     }
 
     // Update is called once per frame
@@ -27,32 +40,19 @@ public class MovePlayer : MonoBehaviour
         Vector3 position;
 
         // Left-right movement
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+        if (dashTimer >= 0){
+            Dashing();
+        }
+        else if (Input.GetKey(KeyCode.E) && !changeDash){
+            dashTimer = 0.1f;
+            changeDash = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.E) && changeDash){
+            changeDash = false;
+        }
+        else if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && dashTimer < 0)
         {
-            float angle;
-            Vector3 direction, target;
-
-            position = transform.position;
-            angle = rotationSpeed * Time.deltaTime;
-            direction = position - transform.parent.position;
-            if (Input.GetKey(KeyCode.A))
-            {
-                target = transform.parent.position + Quaternion.AngleAxis(angle, Vector3.up) * direction;
-                if (charControl.Move(target - position) != CollisionFlags.None)
-                {
-                    transform.position = position;
-                    Physics.SyncTransforms();
-                }
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                target = transform.parent.position + Quaternion.AngleAxis(-angle, Vector3.up) * direction;
-                if (charControl.Move(target - position) != CollisionFlags.None)
-                {
-                    transform.position = position;
-                    Physics.SyncTransforms();
-                }
-            }
+            Moving();
         }
 
         // Correct orientation of player
@@ -86,11 +86,105 @@ public class MovePlayer : MonoBehaviour
         }
         else
             speedY -= gravity * Time.deltaTime;
+
+        if (Input.GetKey(KeyCode.Q) && !changeButton){
+            changeButton = true;
+            cicle = !cicle;
+            float angle = Mathf.Atan2(transform.position.x, transform.position.z);
+            if(cicle){
+                //intern
+                Vector3 pos = transform.position;
+                pos.x = (float)1.84*Mathf.Sin(angle);
+                pos.z = (float)1.84*Mathf.Cos(angle);
+                pos.y = (float)(pos.y + 0.38);
+                transform.position = pos;
+            }else {
+                //outern
+                Vector3 pos = transform.position;
+                pos.x = (float)2.91*Mathf.Sin(angle);
+                pos.z = (float)2.91*Mathf.Cos(angle);
+                pos.y = (float)(pos.y - 0.37);
+                transform.position = pos;
+            }
+        }else if(Input.GetKeyUp(KeyCode.Q) && changeButton){
+            changeButton = false;
+        }
+
+        if (Input.GetKey(KeyCode.R) && !changeInmortal){
+            changeInmortal = true;
+        }else if(Input.GetKeyUp(KeyCode.R) && changeInmortal){
+            changeInmortal = false;
+            inmortal = !inmortal;
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Entered collision with " + collision.gameObject.name);
+        
+    }
+    void Moving(){
+        CharacterController charControl = GetComponent<CharacterController>();
+        Vector3 position;
+        float angle;
+        Vector3 direction, target;
+        rotationSpeed = 100;
+        position = transform.position;
+        angle = rotationSpeed * Time.deltaTime;
+        direction = position - transform.parent.position;
+        if (Input.GetKey(KeyCode.A))
+        {
+            target = transform.parent.position + Quaternion.AngleAxis(angle, Vector3.up) * direction;
+            if (charControl.Move(target - position) != CollisionFlags.None)
+            {
+                transform.position = position;
+                Physics.SyncTransforms();
+            }
+            dir = false;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            target = transform.parent.position + Quaternion.AngleAxis(-angle, Vector3.up) * direction;
+            if (charControl.Move(target - position) != CollisionFlags.None)
+            {
+                transform.position = position;
+                Physics.SyncTransforms();
+            }
+            dir = true;
+        }
+    }
+    
+    void Dashing(){
+        dashTimer -= Time.deltaTime;
+        CharacterController charControl = GetComponent<CharacterController>();
+        Vector3 position;
+        float angle;
+        Vector3 direction, target;
+        rotationSpeed = 500;
+        position = transform.position;
+        angle = rotationSpeed * Time.deltaTime;
+        direction = position - transform.parent.position;
+        if (!dir)
+        {
+            target = transform.parent.position + Quaternion.AngleAxis(angle, Vector3.up) * direction;
+            if (charControl.Move(target - position) != CollisionFlags.None)
+            {
+                transform.position = position;
+                Physics.SyncTransforms();
+            }
+            dir = false;
+        }
+        else if (dir)
+        {
+            target = transform.parent.position + Quaternion.AngleAxis(-angle, Vector3.up) * direction;
+            if (charControl.Move(target - position) != CollisionFlags.None)
+            {
+                transform.position = position;
+                Physics.SyncTransforms();
+            }
+            dir = true;
+        }
+
     }
 }
 
