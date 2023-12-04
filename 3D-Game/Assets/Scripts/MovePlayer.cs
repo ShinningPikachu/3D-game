@@ -17,6 +17,9 @@ public class MovePlayer : MonoBehaviour
 
     public float dashTimer;
     bool changeDash;
+
+    public int vida;
+    public float dashEnergy;
     void Start()
     {
         // Store starting direction of the player with respect to the axis of the level
@@ -31,6 +34,8 @@ public class MovePlayer : MonoBehaviour
         changeInmortal = false;
         dashTimer = 0;
         changeDash = false;
+        vida = 5;
+        dashEnergy = 0.0f;
     }
 
     // Update is called once per frame
@@ -38,9 +43,9 @@ public class MovePlayer : MonoBehaviour
     {
         CharacterController charControl = GetComponent<CharacterController>();
         Vector3 position;
-
         // Left-right movement
         if (dashTimer >= 0){
+            inmortal = true;
             Dashing();
         }
         else if (Input.GetKey(KeyCode.E) && !changeDash){
@@ -52,6 +57,7 @@ public class MovePlayer : MonoBehaviour
         }
         else if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) && dashTimer < 0)
         {
+            inmortal = false;
             Moving();
         }
 

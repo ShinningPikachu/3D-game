@@ -343,6 +343,7 @@
 -r:"Library/Bee/artifacts/2400b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Scripts/FollowPlayer.cs"
 "Assets/Scripts/MovePlayer.cs"
+"Assets/Scripts/Plataform.cs"
 -langversion:9.0
 
 /deterministic

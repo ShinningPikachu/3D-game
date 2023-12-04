@@ -38,6 +38,7 @@
   <ItemGroup>
      <Compile Include="Assets/Scripts/MovePlayer.cs" />
      <Compile Include="Assets/Scripts/FollowPlayer.cs" />
+     <Compile Include="Assets/Scripts/Plataform.cs" />
      <None Include="Assets/Audio/CasualGameBGM05/ReadMe.txt" />
     <Reference Include="UnityEngine">
         <HintPath>/home/pikachu/Unity/Hub/Editor/2021.3.22f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
