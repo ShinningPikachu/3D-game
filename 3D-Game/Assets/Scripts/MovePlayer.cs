@@ -20,6 +20,8 @@ public class MovePlayer : MonoBehaviour
 
     public int vida;
     public float dashEnergy;
+
+    public bool bigJump;
     void Start()
     {
         // Store starting direction of the player with respect to the axis of the level
@@ -36,6 +38,7 @@ public class MovePlayer : MonoBehaviour
         changeDash = false;
         vida = 5;
         dashEnergy = 0.0f;
+        bigJump = false;
     }
 
     // Update is called once per frame
@@ -85,6 +88,11 @@ public class MovePlayer : MonoBehaviour
         }
         if (charControl.isGrounded)
         {
+            if(bigJump && jumpSpeed != 10){
+                jumpSpeed = 10;
+            }else if(!bigJump && jumpSpeed != 5){
+                jumpSpeed = 5;
+            }
             if (speedY < 0.0f)
                 speedY = 0.0f;
             if (Input.GetKey(KeyCode.W))
@@ -127,8 +135,27 @@ public class MovePlayer : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Entered collision with " + collision.gameObject.name);
-        
+        bigJump = true;
     }
+
+    /// <summary>
+    /// OnTriggerEnter is called when the Collider other enters the trigger.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entered collision with " + other.gameObject.name);
+        if(other.gameObject.tag == "Jumper")
+            bigJump = true;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Exited collision with " + other.gameObject.name);
+        if(other.gameObject.tag == "Jumper")
+            bigJump = false;
+    }
+
     void Moving(){
         CharacterController charControl = GetComponent<CharacterController>();
         Vector3 position;
