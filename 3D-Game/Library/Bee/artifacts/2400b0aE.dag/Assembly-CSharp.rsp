@@ -344,7 +344,9 @@
 "Assets/Scripts/Enemy1.cs"
 "Assets/Scripts/FollowPlayer.cs"
 "Assets/Scripts/MovePlayer.cs"
+"Assets/Scripts/PistolController.cs"
 "Assets/Scripts/Plataform.cs"
+"Assets/Scripts/ProyectilController.cs"
 -langversion:9.0
 
 /deterministic
