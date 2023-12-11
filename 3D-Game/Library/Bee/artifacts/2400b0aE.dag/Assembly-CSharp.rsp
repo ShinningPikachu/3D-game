@@ -341,6 +341,7 @@
 -r:"Library/Bee/artifacts/2400b0aE.dag/Unity.VisualStudio.Editor.ref.dll"
 -r:"Library/Bee/artifacts/2400b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/2400b0aE.dag/UnityEngine.UI.ref.dll"
+"Assets/Scripts/Enemy1.cs"
 "Assets/Scripts/FollowPlayer.cs"
 "Assets/Scripts/MovePlayer.cs"
 "Assets/Scripts/Plataform.cs"

@@ -219,6 +219,10 @@ public class MovePlayer : MonoBehaviour
         }
 
     }
+
+    void Shoot(){
+        
+    }
 }
 
 
